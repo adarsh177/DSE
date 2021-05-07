@@ -1,12 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import CompanyScreen from './screens/CompanyScreen';
-import StocksScreen from './screens/StocksScreen';
+import App from './App';
 
 ReactDOM.render(
   <React.StrictMode>
-    <StocksScreen />
+    <App />
   </React.StrictMode>,
   document.getElementById('root')
 );

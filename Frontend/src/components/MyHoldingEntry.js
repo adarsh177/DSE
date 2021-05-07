@@ -1,12 +1,13 @@
 import styled from 'styled-components';
 
+// companyName, stockCount, rate
 export default function MyHoldingEntry(props){
     return(
-        <OuterContainer style={props.style}>
-            <CompanyName>Reliance Industries</CompanyName>
-            <Field style={{textAlign: "right"}}>123 Stocks</Field>
-            <Field><b style={{color: "black"}}>Rate: </b> 123 Ether</Field>
-            <Field style={{textAlign: "right"}}>25 Ether</Field>
+        <OuterContainer style={props.style} onClick={() => props.onClick()}>
+            <CompanyName>{props.companyName}</CompanyName>
+            <Field style={{textAlign: "right"}}>{props.stockCount} Stocks</Field>
+            <Field><b style={{color: "black"}}>Rate: </b> {props.rate} Ether/ Stock</Field>
+            <Field style={{textAlign: "right"}}>{props.stockCount * props.rate} Ether</Field>
         </OuterContainer>
     )
 }

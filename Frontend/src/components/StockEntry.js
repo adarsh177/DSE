@@ -1,16 +1,17 @@
 import styled from 'styled-components';
 
+// companyName, rate, marketCap
 export default function StockEntry(props){
     return(
-        <Container>
+        <Container onClick={() => props.onClick()}>
             <CompanyName style={{gridArea: "company"}}>
-                Reliance Industries
+                {props.companyName}
             </CompanyName>
             <Field style={{gridArea: "rate", textAlign: "end", paddingRight: "5px"}}>
-                12 Ether
+                {props.rate} Ether/ Stock
             </Field>
             <Field style={{gridArea: "cap"}}>
-                Market Cap: 2564 Ether
+                Market Cap: {props.marketCap} Ether
             </Field>
         </Container>
     )

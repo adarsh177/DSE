@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from 'react-router';
 import styled from 'styled-components';
 import RefreshFloatBtn from '../components/RefreshFloatBtn';
 import TransactionsEntry from '../components/TransactionsEntry';
@@ -20,12 +21,16 @@ class CompanyScreen extends React.Component{
         });
     }
 
+    GoBack(){
+        this.props.history.goBack();
+    }
+
     render(){
         return(
             <div className="MainContainer">
                 <div className="MobileContainer MobileContainerFlow">
                     <TopBar>
-                        <Icon src={BackImg}/>
+                        <Icon onClick={() => this.GoBack()} src={BackImg}/>
                         <Icon src={RefreshImg}/>
                     </TopBar>
 
@@ -91,13 +96,13 @@ class CompanyScreen extends React.Component{
     GetTransactionTabView(){
         return(
             <TabView>
-                <TransactionsEntry from="SADFAS3435245344RAWFDAS" />
-                <TransactionsEntry from="SADFAS3435245344RAWFDAS" />
-                <TransactionsEntry from="SADFAS3435245344RAWFDAS" />
-                <TransactionsEntry from="SADFAS3435245344RAWFDAS" />
-                <TransactionsEntry from="SADFAS3435245344RAWFDAS" />
-                <TransactionsEntry from="SADFAS3435245344RAWFDAS" />
-                <TransactionsEntry from="SADFAS3435245344RAWFDAS" />
+                <TransactionsEntry to="ADDAWFDASFAS3435245344R" from="SADFAS3435245344RAWFDAS" rate="1.2" stocks="123"/>
+                <TransactionsEntry to="ADDAWFDASFAS3435245344R" from="SADFAS3435245344RAWFDAS" rate="1.2" stocks="123"/>
+                <TransactionsEntry to="ADDAWFDASFAS3435245344R" from="SADFAS3435245344RAWFDAS" rate="1.2" stocks="123"/>
+                <TransactionsEntry to="ADDAWFDASFAS3435245344R" from="SADFAS3435245344RAWFDAS" rate="1.2" stocks="123"/>
+                <TransactionsEntry to="ADDAWFDASFAS3435245344R" from="SADFAS3435245344RAWFDAS" rate="1.2" stocks="123"/>
+                <TransactionsEntry to="ADDAWFDASFAS3435245344R" from="SADFAS3435245344RAWFDAS" rate="1.2" stocks="123"/>
+                <TransactionsEntry to="ADDAWFDASFAS3435245344R" from="SADFAS3435245344RAWFDAS" rate="1.2" stocks="123"/>
             </TabView>
         )
     }
@@ -201,7 +206,13 @@ const ButtonPanel = styled.div`
     align-items: center;
     margin-top: 10px;
     margin-left: -20px;
-    margin-bottom: -10px;
+
+    @media (max-width: 500px){
+        margin-bottom: -10px;
+    }
+    @media (min-width: 501px){
+        margin-bottom: -20px;
+    }
 `;
 
 const BottomButton = styled.div`
@@ -216,4 +227,4 @@ const BottomButton = styled.div`
     padding: 10px;
 `;
 
-export default CompanyScreen;
+export default withRouter(CompanyScreen);

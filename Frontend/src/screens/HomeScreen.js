@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from 'react-router';
 import styled from 'styled-components';
 import MyHoldingEntry from '../components/MyHoldingEntry';
 import RefreshFloatBtn from '../components/RefreshFloatBtn';
@@ -11,12 +12,16 @@ class HomeScreen extends React.Component{
         };
     }
 
+    ShowAllStocks(){
+        this.props.history.push('/Stocks');
+    }
+
     render(){
         return(
             <div className="MainContainer">
                 <div className="MobileContainer MobileContainerFlow">
                     <div className="MobileContainerScroll">
-                        <AllStocksBtn onClick={() => {}}>ALL STOCKS</AllStocksBtn>
+                        <AllStocksBtn onClick={() => this.ShowAllStocks()}>ALL STOCKS</AllStocksBtn>
                         <span style={{marginTop: "40px"}}>
                             <StatTitle>Wallet ID</StatTitle>
                             <StatValue>3412ASFD4ASDFASD</StatValue>
@@ -27,13 +32,13 @@ class HomeScreen extends React.Component{
                         </span>
 
                         <HoldingTitle>Your Holdings</HoldingTitle>
-                        <MyHoldingEntry />
-                        <MyHoldingEntry />
-                        <MyHoldingEntry />
-                        <MyHoldingEntry />
-                        <MyHoldingEntry style={{marginBottom: "50px"}}/>
+                        <MyHoldingEntry companyName="Reliance Industries" stockCount="25" rate="0.9" onClick={() => this.props.history.push('/Company')} />
+                        <MyHoldingEntry companyName="Reliance Industries" stockCount="25" rate="0.9" onClick={() => this.props.history.push('/Company')} />
+                        <MyHoldingEntry companyName="Reliance Industries" stockCount="25" rate="0.9" onClick={() => this.props.history.push('/Company')} />
+                        <MyHoldingEntry companyName="Reliance Industries" stockCount="25" rate="0.9" onClick={() => this.props.history.push('/Company')} />
+                        <MyHoldingEntry companyName="Reliance Industries" stockCount="25" rate="0.9" onClick={() => this.props.history.push('/Company')} style={{marginBottom: "50px"}}/>
                     </div>
-                    <RefreshFloatBtn refreshing />
+                    <RefreshFloatBtn />
                 </div>
             </div>
         )
@@ -77,4 +82,4 @@ const HoldingTitle = styled.p`
 `;
 
 
-export default HomeScreen;
+export default withRouter(HomeScreen);

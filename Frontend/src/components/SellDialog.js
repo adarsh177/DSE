@@ -1,6 +1,9 @@
+import { useState } from 'react';
 import styled from 'styled-components';
 
+// currentRate:number, onOuterClicked:func, onSellClicked(text):func
 export default function SellDialog(props){
+    const [text, setText] = useState(props.currentRate);
     return(
         <OuterContainer >
             <Backdrop onClick={() => props.onOuterClick()} />
@@ -8,13 +11,13 @@ export default function SellDialog(props){
                 <InnerDialog>
                     <Heading>Reliance Industries</Heading>
                     <Label>Max price to buy at:</Label>
-                    <Input />
+                    <Input onChange={(event) => setText(event.target.value)} value={text} type="number" />
                     <Ether>Ether</Ether>
                     <Desc>should be greater or equal to Current Market Price</Desc>
                     <br />
                     <Desc>Your wallet will be debited on clicking BUY and then if the shares are available at the rate lower/equal to this max price, you will get the shares and the difference amount will be refunded back to your wallet instantly</Desc>
                 </InnerDialog>
-                <ActionBtn>SELL</ActionBtn>     
+                <ActionBtn onClick={() => props.onSellClick(text)}>SELL</ActionBtn>     
             </Dialog>
         </OuterContainer>
     )
@@ -70,6 +73,10 @@ const ActionBtn = styled.button`
     padding: 15px;
     text-align: center;
     width: 100%;
+
+    :hover{
+        cursor: pointer;
+    }
 `;
 
 const Heading = styled.h1`

@@ -2,6 +2,7 @@ import { keyframes } from 'styled-components';
 import SpinnerImage from '../resources/spinner.svg';
 import styled from 'styled-components'
 
+// show
 export default function LoadingSpinner(props){
     if(!props.show)
         return(<div style={{width: "35px", height: "35px"}}></div>);

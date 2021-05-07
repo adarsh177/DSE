@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+// from, to, stocks, rate
 export default function TransactionsEntry(props){
     return(
         <Container>
@@ -9,15 +10,15 @@ export default function TransactionsEntry(props){
             </span>
             <span style={{gridArea: "to"}}>
                 <StatTitle>To</StatTitle>
-                <StatValue>XCVJZXOIOSDKOFPOASFDFFF</StatValue>
+                <StatValue>{props.to}</StatValue>
             </span>
             <span style={{gridArea: "share"}}>
                 <StatTitle>Shares</StatTitle>
-                <StatValue>254</StatValue>
+                <StatValue>{props.stocks}</StatValue>
             </span>
             <span style={{gridArea: "rate"}}>
                 <StatTitle>Rate</StatTitle>
-                <StatValue>2 Ether</StatValue>
+                <StatValue>{props.rate} Ether/ Stock</StatValue>
             </span>
         </Container>
     )

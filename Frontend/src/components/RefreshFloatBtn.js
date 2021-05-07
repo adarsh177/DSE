@@ -1,6 +1,7 @@
 import styled, { keyframes } from 'styled-components';
 import RefreshImg from '../resources/refresh.svg';
 
+// refreshing, onClick
 export default function RefreshFloatBtn(props){
     return(
         <OuterButton onClick={() => props.onClick()}>

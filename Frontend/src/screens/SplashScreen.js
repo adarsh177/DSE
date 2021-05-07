@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import LoadingSpinner from '../components/LoadingSpinner';
 import RefreshFloatBtn from '../components/RefreshFloatBtn';
 import MyHoldingEntry from '../components/MyHoldingEntry';
+import { withRouter } from 'react-router';
 
 class SplashScreen extends React.Component{
     constructor(props){
@@ -13,6 +14,12 @@ class SplashScreen extends React.Component{
             loaded: false,
             refreshing: false,
         }
+    }
+    
+    componentDidMount(){
+        setTimeout(() => {
+        this.props.history.push('/Dashboard');
+        }, 5000);
     }
 
     render(){
@@ -53,4 +60,4 @@ const SplashImage = styled.img`
     width: 200px;
 `;
 
-export default SplashScreen;
+export default withRouter(SplashScreen);

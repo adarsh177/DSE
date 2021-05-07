@@ -7,7 +7,7 @@ import StockEntry from '../components/StockEntry';
 import TransactionsEntry from '../components/TransactionsEntry';
 import BackImg from '../resources/back.svg';
 import RefreshImg from '../resources/refresh_black.svg';
-
+import {withRouter} from 'react-router-dom';
 
 class StocksScreen extends React.Component{
     constructor(props){
@@ -22,36 +22,34 @@ class StocksScreen extends React.Component{
             <div className="MainContainer">
                 <div className="MobileContainer MobileContainerFlow">
                     <TopBar>
-                        <Icon src={BackImg}/>
+                        <Icon onClick={() => this.props.history.goBack()} src={BackImg}/>
                         <Title>ALL STOCKS</Title>
                         <Icon src={RefreshImg} />
                     </TopBar>
                     
                     <StockList>
-                        <StockEntry />
-                        <StockEntry />
-                        <StockEntry />
-                        <StockEntry />
-                        <StockEntry />
-                        <StockEntry />
-                        <StockEntry />
-                        <StockEntry />
-                        <StockEntry />
-                        <StockEntry />
-                        <StockEntry />
-                        <StockEntry />
-                        <StockEntry />
-                        <StockEntry />
-                        <StockEntry />
-                        <StockEntry />
-                        <StockEntry />
-                        <StockEntry />
-                        <StockEntry />
-                        <StockEntry />
-                        <StockEntry />
+                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
+                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
+                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
+                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
+                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
+                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
+                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
+                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
+                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
+                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
+                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
+                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
+                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
+                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
+                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
+                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
+                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
+                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
+                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
+                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
+                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
                     </StockList>
-
-                    <BuyDialog />
                 </div>
             </div>
         );
@@ -96,4 +94,4 @@ const StockList = styled.div`
     margin-top: 20px;
 `;
 
-export default StocksScreen;
+export default withRouter(StocksScreen);

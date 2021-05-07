@@ -1,5 +1,6 @@
 # Decentralized Stock Exchange
 ![DSE](https://adarshshrivastava.in/dse.png)
+
 Build over Ethereum framework, this is a Decentralized Stock Exchange Pilot Project. There are a number of things to be incoprated in it as the possibilities are endless but this version of DSE contains some core features like:
 
  - User Identity management - using Portis
@@ -11,6 +12,7 @@ Build over Ethereum framework, this is a Decentralized Stock Exchange Pilot Proj
 ## Technology Used
 
  - Ethereum - Backend using SmartContracts
+ - Portis - Wallet, Providing User Identification
  - ReactJS - Frontend
  - Web3.js - to interact with SmartContracts
  - Ganache - to create local ethereum blockchain for test deployment

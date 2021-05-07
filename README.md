@@ -1,5 +1,5 @@
 # Decentralized Stock Exchange
-![DSE](https://adarshshrivastava.in/dse.png)
+![logo](https://user-images.githubusercontent.com/41023846/117513641-c853ba00-afaf-11eb-9d7d-c427a95ba19e.png)
 
 Build over Ethereum framework, this is a Decentralized Stock Exchange Pilot Project. There are a number of things to be incoprated in it as the possibilities are endless but this version of DSE contains some core features like:
 

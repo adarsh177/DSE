@@ -37,12 +37,14 @@ contract Company{
         totalStocks = 1000; // change this with number of stocks a company wants to create
         holdingsMap[owner] = totalStocks; // giving all the stocks to owner at first
         description = "Here goes my company description!"; // add description here, thought it could also be editied later through updateDescription()
-        listStocksForSale(msg.sender, 600, 1 ether); // here in place of 600, add the number of stocks you want to list, remaining are held by company itself
+        uint stocksToList = 600; // number of stocks you want to list, remaining are held by company itself
+        currentRate = 1; // in ether, rate at which these stocks should be listed
+        listStocksForSale(msg.sender, stocksToList, currentRate); // here in place of 600, add the
     }
     
     // lists stocks for sale and removes them from holdings
     function listStocksForSale(address _address, uint stocks, uint rate) public returns(bool){
-        if(msg.sender != ExchangeAddress)
+        if(msg.sender != ExchangeAddress && msg.sender != owner)
             revert('Not Allowed');
         
         if(holdingsMap[_address] < stocks){
@@ -57,7 +59,7 @@ contract Company{
 
     // unlists all stocks which were listed for sale and returns them to holdings
     function unlistStocksFromSale(address _address) public {
-        if(msg.sender != ExchangeAddress)
+        if(msg.sender != ExchangeAddress && msg.sender != owner)
             revert('Not Allowed');
         
         for(uint i = 0; i < listingsArray.length; i++){
@@ -76,7 +78,7 @@ contract Company{
     // and inside listingArray there are two listings of 40Stocks and 80Stocks
     // so It will have to take 40 From first and remaining 60 from other.
     function buyStocks(address _address, uint stockCount, uint maxRate) public payable{
-        if(msg.sender != ExchangeAddress)
+        if(msg.sender != ExchangeAddress && msg.sender != owner)
             revert('Not Allowed');
         
         uint matchIndex;
@@ -103,8 +105,8 @@ contract Company{
             TransactionHappened(msg.sender, listingsArray[matchIndex].stockOwner, listingsArray[matchIndex].stocksCount, listingsArray[matchIndex].rate);
 
             // ether transfer
-            payable(listingsArray[matchIndex].stockOwner).transfer(listingsArray[matchIndex].stocksCount * listingsArray[matchIndex].rate);
-            payable(_address).transfer(listingsArray[matchIndex].stocksCount * (maxRate - listingsArray[matchIndex].rate));
+            payable(listingsArray[matchIndex].stockOwner).transfer(etherToWie(listingsArray[matchIndex].stocksCount * listingsArray[matchIndex].rate));
+            payable(_address).transfer(etherToWie(listingsArray[matchIndex].stocksCount * (maxRate - listingsArray[matchIndex].rate)));
 
             // records
             uint stocksBought = listingsArray[matchIndex].stocksCount;
@@ -117,8 +119,8 @@ contract Company{
             TransactionHappened(msg.sender, listingsArray[matchIndex].stockOwner, stockCount, listingsArray[matchIndex].rate);
 
             // ether transfer
-            payable(listingsArray[matchIndex].stockOwner).transfer(stockCount * listingsArray[matchIndex].rate);
-            payable(_address).transfer(stockCount * (maxRate - listingsArray[matchIndex].rate));
+            payable(listingsArray[matchIndex].stockOwner).transfer(etherToWie(stockCount * listingsArray[matchIndex].rate));
+            payable(_address).transfer(etherToWie(stockCount * (maxRate - listingsArray[matchIndex].rate)));
 
             // records
             holdingsMap[_address] += stockCount;
@@ -196,22 +198,44 @@ contract Company{
     }
 
     function getUserHoldings(address _address) public view returns(uint){
-        if(msg.sender != ExchangeAddress)
+        if(msg.sender != ExchangeAddress && msg.sender != owner)
             revert('Not Allowed');
         
         return holdingsMap[_address];
     }
 
-    function getUserListings(address _address) public view returns(uint){
-        if(msg.sender != ExchangeAddress)
+    // returns stocks and price  at which they are listed
+    function getUserListings(address _address) public view returns(uint, uint){
+        if(msg.sender != ExchangeAddress && msg.sender != owner)
             revert('Not Allowed');
         
         uint totalListings = 0;
+        uint rate = 0;
         for(uint i = 0; i < listingsArray.length; i++){
             if(listingsArray[i].stockOwner == _address){
                 totalListings += listingsArray[i].stocksCount;
+                rate += listingsArray[i].stocksCount * listingsArray[i].rate;
             }
         }
-        return totalListings;
+
+        if(totalListings > 0)
+            rate /= totalListings;
+        
+        return (totalListings, rate);
+    }
+
+    function weiToEther(uint weiVal) private pure returns (uint){
+        return weiVal / 1000000000000000000;
+    }
+
+    function etherToWie(uint weiVal) private pure returns (uint){
+        return weiVal * 1000000000000000000;
+    }
+
+    function addFunds() public payable{
+
+    }
+
+    receive() external payable {
     }
 }

@@ -1,0 +1,116 @@
+html, #root, body, .MainContainer{
+  height: 100%;
+  width: 100vw;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position: relative;
+  overflow: hidden;
+}
+
+*{
+  padding: 0;
+  margin: 0;
+}
+
+:root{
+  --main-color: #014F86;
+  --sec-color: white;
+  --bg-color: #335F8A;
+}
+
+.MainContainer{
+  background-color: var(--bg-color);
+  background-image: url('./resources/carbon-fibre.png');
+  background-repeat: repeat;
+  position: relative;
+}
+
+.MobileContainer{
+  position: absolute;
+  background-color: var(--sec-color);
+  box-shadow: 1px 1px 2px 2px rgba(0, 0, 0, 0.25);
+}
+
+.MobileContainer::after{
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 20px;
+  font-size: 0.8em;
+  background-color: #5a189a;
+  color: white;
+  content: "By: Adarsh Shrivastava";
+  text-align: center;
+  vertical-align: middle;
+}
+
+.MobileContainerFlow{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.MobileContainerScroll{
+  width: calc(100% - 40px);
+  height: calc(100% - 60px);
+  padding: 20px;
+  padding-bottom: 40px;
+  position: absolute;
+  top: 0;
+  left: 0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+::-webkit-scrollbar-track{
+  background-color: white;
+  border: 0.5px solid gray;
+}
+
+::-webkit-scrollbar-thumb{
+  background-color: var(--main-color);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar{
+  width: 5px;
+  position: relative;
+}
+
+@media (max-width: 500px) {
+  .MobileContainer{
+    left: 0;
+    top: 0;
+    width: calc(100vw - 40px);
+    height: calc(100% - 50px);
+    padding: 20px;
+    padding-bottom: 30px;
+  }
+}
+
+@media (min-width: 501px) {
+  .MobileContainer{
+    left: 50%;
+    top: 50%;
+    width: calc((80vh * 0.5625) - 40px);
+    height: calc(80vh - 60px);
+    transform: translateX(-50%) translateY(-50%);
+    padding: 20px;
+    padding-bottom: 40px;
+  }
+}
+

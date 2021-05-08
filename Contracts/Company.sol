@@ -84,7 +84,7 @@ contract Company{
         uint leastRate = maxRate + 1;
 
         if(stockCount == 0)
-            return 0;
+            return;
 
         for(uint i = 0; i < listingsArray.length; i ++){
             if(listingsArray[i].rate <= maxRate && listingsArray[i].rate < leastRate){

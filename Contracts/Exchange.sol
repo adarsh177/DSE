@@ -92,7 +92,7 @@ contract Exchange{
         return(idList, nameList, stockList, rateList);
     }
 
-    // returns in sequence: id, contractAddress, volume, rate, maxrate, minrate, desc, holdings, listings, listingprice
+    // returns in sequence: id, name, contractAddress, volume, rate, maxrate, minrate, desc, holdings, listings, listingprice
     function getCompanyDetail(string memory id) public view returns(string memory, string memory, address, uint, uint, uint, uint, string memory, uint, uint, uint){
         address adr = getCompanyContractAddressFromId(id);
         if(adr == address(0))

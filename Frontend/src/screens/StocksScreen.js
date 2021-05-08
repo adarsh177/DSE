@@ -13,8 +13,50 @@ class StocksScreen extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            currentTab: "desc", // desc, tran
+            stocks: [],
+            dataLoaded: false,
         }
+    }
+
+    componentDidMount(){
+        // check if all initialized else return to splash
+        if(window.portisAccount == null){
+            console.log('Invalid data, getting back to splash screen');
+            this.props.history.push('/');
+            return;
+        }
+
+        console.log('AllStocks mounted : ' + new Date().getTime());
+        if(!this.state.dataLoaded)
+            this.LoadAllStocks();
+    }
+
+    LoadAllStocks(){
+        window.exchangeContract.methods.getCompanyListDetailed()
+            .call({from: window.portisAccount})
+            .then(data => {
+                var ids = data[0];
+                var names = data[1];
+                var volumes = data[2];
+                var rates = data[3];
+
+                this.state.stocks =  [];
+                for(let i = 0; i < ids.length; i++){
+                    this.state.stocks.push({
+                        id: ids[i],
+                        name: names[i],
+                        volume: volumes[i],
+                        rate: rates[i]
+                    });
+                }
+
+                this.state.dataLoaded = true;
+                this.forceUpdate();
+            })
+            .catch(err => {
+                console.log('Error loading stocks ',err)
+                alert(`Error loading stocks: ${err}. Please try again`);
+            })
     }
 
     render(){
@@ -24,31 +66,20 @@ class StocksScreen extends React.Component{
                     <TopBar>
                         <Icon onClick={() => this.props.history.goBack()} src={BackImg}/>
                         <Title>ALL STOCKS</Title>
-                        <Icon src={RefreshImg} />
+                        <Icon onClick={() => this.LoadAllStocks()} src={RefreshImg} />
                     </TopBar>
                     
                     <StockList>
-                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
-                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
-                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
-                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
-                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
-                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
-                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
-                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
-                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
-                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
-                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
-                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
-                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
-                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
-                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
-                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
-                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
-                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
-                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
-                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
-                        <StockEntry companyName="Reliance Industries" rate="1.1" marketCap="34234" onClick={() => this.props.history.push('/Company')}/>
+                        {this.state.stocks.map(stock => {
+                            return(
+                                <StockEntry 
+                                    id={stock.id}
+                                    companyName={stock.name} 
+                                    rate={stock.rate} 
+                                    marketCap={stock.volume * stock.rate} 
+                                    onClick={() => this.props.history.push(`/Company?stockId=${stock.id}`)}/>
+                            );
+                        })}
                     </StockList>
                 </div>
             </div>

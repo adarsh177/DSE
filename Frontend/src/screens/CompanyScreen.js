@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { withRouter } from 'react-router';
 import styled from 'styled-components';
 import RefreshFloatBtn from '../components/RefreshFloatBtn';
 import TransactionsEntry from '../components/TransactionsEntry';
 import BackImg from '../resources/back.svg';
 import RefreshImg from '../resources/refresh_black.svg';
+import CompanyABI from '../Artifacts/CompanyABI.json';
 
 
 class CompanyScreen extends React.Component{
@@ -12,6 +13,20 @@ class CompanyScreen extends React.Component{
         super(props);
         this.state = {
             currentTab: "desc", // desc, tran
+            description: {
+                id: null,
+                name: '',
+                rate: 0,
+                volume: 0,
+                maxrate: 0,
+                minrate: 0,
+                desc: ""
+            },
+            holdings: 0, // a number
+            holdingsRate: 0, // rate at which holdings are held
+            listings: 0, // a number
+            contractAddress: null,
+            transactions: null, // {from, to, amount, rate}
         }
     }
 
@@ -25,17 +40,107 @@ class CompanyScreen extends React.Component{
         this.props.history.goBack();
     }
 
+    componentDidMount(){
+        // check if all initialized else return to splash
+        if(window.portisAccount == null){
+            console.log('Invalid data, getting back to splash screen');
+            this.props.history.push('/');
+            return;
+        }
+
+        console.log('Company Page mounted : ' + new Date().getTime());
+        if(this.state.description.id == null)
+            this.LoadData();
+    }
+
+    LoadTransactions(){
+        if(this.state.contractAddress == null)
+            return;
+        
+        this.companyContract = new window.web3.eth.Contract(CompanyABI.abi, this.state.contractAddress);
+        this.companyContract.getPastEvents('Transaction')
+            .then(events => {
+                console.log('events', events);
+                this.state.transactions = [];
+                events.forEach(event => {
+                    if(event.returnValues._to !== null && event.returnValues._from !== null){
+                        this.state.transactions.push({
+                            to: event.returnValues._to,
+                            from: event.returnValues._from,
+                            amount: event.returnValues.amount,
+                            rate: event.returnValues.rate,
+                        });
+                    }
+                });
+                console.log('Final TRANSACTIONS', this.state.transactions);
+                this.forceUpdate();
+            })
+            .catch(err => {
+                console.log('Error loading transaction events', err);
+                alert(`Error loading transaction events: ${err}`);
+            });
+    }
+
+    LoadData(){
+        var data = {};
+        var query = this.props.location.search.replace('?', '');
+        query.split('&').forEach(pair => {
+            data[pair.split('=')[0]] = pair.split('=')[1];
+        })
+        
+        if(!data['stockId']){
+            this.props.history.goBack();
+            return;
+        }
+
+        window.exchangeContract.methods.getCompanyDetail(data['stockId'])
+            .call({from: window.portisAccount})
+            .then(details => {
+                console.log('details', details);
+                this.state.description = {
+                    id: details[0],
+                    name: details[1],
+                    rate: details[4],
+                    volume: details[3],
+                    maxrate: details[5],
+                    minrate: details[6],
+                    desc: details[7]
+                };
+
+                this.setState({
+                    holdings: details[8],
+                    holdingsRate: details[10],
+                    listings: details[9],
+                    contractAddress: details[2]
+                }, () => {
+                    if(this.state.transactions == null)
+                        this.LoadTransactions();
+                });
+            })
+            .catch(err => {
+                console.log('Error loading company details', err);
+                alert('Error loading company details: ' + err + '. Please try again');
+            })
+    }
+
+    RefreshPressed(){
+        if(this.state.currentTab == 'desc')
+            this.LoadData();
+        else
+            this.LoadTransactions();
+    }
+
     render(){
         return(
             <div className="MainContainer">
                 <div className="MobileContainer MobileContainerFlow">
                     <TopBar>
                         <Icon onClick={() => this.GoBack()} src={BackImg}/>
-                        <Icon src={RefreshImg}/>
+                        <Icon onClick={() => this.RefreshPressed()} src={RefreshImg}/>
                     </TopBar>
 
-                    <CompanyName>Reliance Industries, REL</CompanyName>
-                    <CurrentRate>1 Ether</CurrentRate>
+                    <CompanyName>{this.state.description.name !== '' ? `${this.state.description.name}, ${this.state.description.id}` : "Loading..."}</CompanyName>
+                    <CurrentRate>{this.state.description.rate ? this.state.description.rate : "..."} Ether</CurrentRate>
 
                     <TabContainer>
                         <TabLabel selected={this.state.currentTab == 'desc'} onClick={() => this.OnTabClicked('desc')}>Description</TabLabel>
@@ -48,7 +153,7 @@ class CompanyScreen extends React.Component{
                         this.GetTransactionTabView()}
                     
                     <ButtonPanel>
-                        <BottomButton disabled>SELL</BottomButton>
+                        <BottomButton disabled={this.state.holdings == 0}>SELL</BottomButton>
                         <BottomButton>BUY</BottomButton>
                     </ButtonPanel>
                 </div>
@@ -62,31 +167,39 @@ class CompanyScreen extends React.Component{
                 <DescGrid>
                     <span style={{gridArea: "item1"}}>
                         <StatTitle>Your Holdings</StatTitle>
-                        <StatValue>21 Stocks</StatValue>
+                        <StatValue>{this.state.holdings} Stocks</StatValue>
                     </span>
-                    <span style={{gridArea: "item2"}}></span>
+                    <span style={{gridArea: "item2"}}>
+                        {this.state.listings > 0 && 
+                        <Fragment>
+                            <StatTitle>Your Holdings(click to unlist)</StatTitle>
+                            <StatValue>{this.state.listings} Stocks</StatValue>
+                        </Fragment>}
+                    </span>
                     
                     <span style={{gridArea: "item3"}}>
                         <StatTitle>Volume</StatTitle>
-                        <StatValue>543321 Stocks</StatValue>
+                        <StatValue>{this.state.description.volume} Stocks</StatValue>
                     </span>
                     <span style={{gridArea: "item4"}}>
                         <StatTitle>Market Cap</StatTitle>
-                        <StatValue>543321 Ethers</StatValue>
+                        <StatValue>{this.state.description.rate * this.state.description.volume} Ethers</StatValue>
                     </span>
 
                     <span style={{gridArea: "item5"}}>
                         <StatTitle>Max</StatTitle>
-                        <StatValue>1.2 Ethers</StatValue>
+                        <StatValue>{this.state.description.maxrate} Ethers</StatValue>
                     </span>
                     <span style={{gridArea: "item6"}}>
                         <StatTitle>Min</StatTitle>
-                        <StatValue>0.6 Ethers</StatValue>
+                        <StatValue>{this.state.description.minrate} Ethers</StatValue>
                     </span>
 
                     <span style={{gridArea: "desc"}}>
                         <StatTitle>Description</StatTitle>
-                        <StatValue style={{marginBottom: "60px"}}>Reliance Industries Limited is an Indian multinational conglomerate company headquartered in Mumbai, India. Reliance owns businesses across India engaged in energy, petrochemicals, textiles, natural resources, retail, and telecommunications. Reliance Industries Limited is an Indian multinational conglomerate company headquartered in Mumbai, India. Reliance owns businesses across India engaged in energy, petrochemicals, textiles, natural resources, retail, and telecommunications.</StatValue>
+                        <StatValue style={{marginBottom: "60px"}}>
+                            {this.state.description.desc}
+                        </StatValue>
                     </span>
                 </DescGrid>
             </TabView>
@@ -96,13 +209,19 @@ class CompanyScreen extends React.Component{
     GetTransactionTabView(){
         return(
             <TabView>
-                <TransactionsEntry to="ADDAWFDASFAS3435245344R" from="SADFAS3435245344RAWFDAS" rate="1.2" stocks="123"/>
-                <TransactionsEntry to="ADDAWFDASFAS3435245344R" from="SADFAS3435245344RAWFDAS" rate="1.2" stocks="123"/>
-                <TransactionsEntry to="ADDAWFDASFAS3435245344R" from="SADFAS3435245344RAWFDAS" rate="1.2" stocks="123"/>
-                <TransactionsEntry to="ADDAWFDASFAS3435245344R" from="SADFAS3435245344RAWFDAS" rate="1.2" stocks="123"/>
-                <TransactionsEntry to="ADDAWFDASFAS3435245344R" from="SADFAS3435245344RAWFDAS" rate="1.2" stocks="123"/>
-                <TransactionsEntry to="ADDAWFDASFAS3435245344R" from="SADFAS3435245344RAWFDAS" rate="1.2" stocks="123"/>
-                <TransactionsEntry to="ADDAWFDASFAS3435245344R" from="SADFAS3435245344RAWFDAS" rate="1.2" stocks="123"/>
+                {this.state.transactions && this.state.transactions.length > 0 ?
+                    this.state.transactions.map(trans => {
+                        return(
+                            <TransactionsEntry 
+                                to={trans.to}
+                                from={trans.from}
+                                rate={trans.rate} 
+                                stocks={trans.amount}/>
+                        );
+                    })
+                    :
+                    <NoTransactions>No Transactions Yet</NoTransactions>
+                }
             </TabView>
         )
     }
@@ -225,6 +344,18 @@ const BottomButton = styled.div`
     border: 0.5px solid gray;
     text-align: center;
     padding: 10px;
+
+    :hover{
+        cursor: pointer;
+    }
+`;
+
+const NoTransactions = styled.p`
+    font-size: 1.4em;
+    color: #9e9e9e;
+    font-weight: 700;
+    align-self: center;
+    margin-top: 40px;
 `;
 
 export default withRouter(CompanyScreen);

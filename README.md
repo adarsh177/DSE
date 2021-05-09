@@ -1,5 +1,6 @@
 # Decentralized Stock Exchange
-**By: Developer's Monk (Adarsh Shrivastava)**
+**By: Developer's Monk (Adarsh Shrivastava)** <br>
+**dApp live at: https://dse.adarshshrivastava.in**
 
 ![logo](https://user-images.githubusercontent.com/41023846/117513641-c853ba00-afaf-11eb-9d7d-c427a95ba19e.png)
 
@@ -28,9 +29,9 @@ Refer to this doc file: https://docs.google.com/document/d/1vPfsUe4D0JQ3AEMYj5Os
 ## How to run
 There are two ways to test this project
 
- 1. **Use Directly from URL (PREFFERED)**
-	URL: https://dse.adarshshrivastava.in
-	I have hosted a ganache blockchain server on my personal AWS EC2 instance and have connected it with this app for testing purposes. I might remove the server after a month or so and then you'll have to run it on your own local machine.<br>
+ 1. **Use Directly from URL (PREFFERED)** <br>
+	URL: https://dse.adarshshrivastava.in <br>
+	I have hosted a ganache blockchain server on my personal AWS EC2 instance and have connected it with this app for testing purposes. I might remove the server after a month or so and then you'll have to run it on your own local machine.<br><br>
 		1. If you don't have Portis wallet then register now from https://wallet.portis.io/ . It's free.<br>
 		2. Go to your portis wallet. Go to **more > Import Ethereum Wallet > Private Key**<br>
 		3. Go to https://adarshshrivastava.in/dse_keys.json . This file contains list of available walletIds and their keys for testing. <br>

@@ -1,22 +1,33 @@
 import { useState } from 'react';
 import styled from 'styled-components';
+import CancelIcon from '../resources/cancel.png';
 
-// currentRate:number, onOuterClicked:func, onSellClicked(text):func
+// currentRate:number, onClose:func, onBuyClicked(text):func
 export default function BuyDialog(props){
-    const [text, setText] = useState(props.currentRate);
+    const [price, setPrice] = useState(props.currentRate);
+    const [stocks, setStocks] = useState(0);
     return(
         <OuterContainer >
-            <Backdrop onClick={() => props.onOuterClick()} />
+            <Backdrop />
             <Dialog>
                 <InnerDialog>
                     <Heading>Reliance Industries</Heading>
-                    <Label>Price to list at:</Label>
-                    <Input onChange={(event) => setText(event.target.value)} value={text} type="number" />
+                    <Label style={{marginTop: "20px"}}>Max price to buy at:</Label>
+                    <Input onChange={(event) => setPrice(event.target.value)} value={price} type="number" onKeyPress={(event) => {
+                        return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57
+                    }}/>
                     <Ether>Ether</Ether>
-                    <Desc>Your shares will be listed and as soon as they gets sold, your wallet will be credited with the amount.</Desc>
+                    <Label>Stocks to buy:</Label>
+                    <Input onChange={(event) => setStocks(event.target.value)} value={stocks} type="number" onKeyPress={(event) => {
+                        return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57
+                    }}/>
+                    <Ether>Stocks</Ether>
+                    <Desc>Max price should be greater or equal to Current Market Price</Desc>
+                    <Desc>Your wallet will be debited now by the full amount and after the transaction, the remaining amount if any will be refunded back immediately.</Desc>
                 </InnerDialog>
-                <ActionBtn onClick={() => props.onBuyClick(text)}>BUY</ActionBtn>
+                <ActionBtn onClick={() => props.onBuyClick(stocks, price)}>BUY</ActionBtn>     
             </Dialog>
+            <CloseBtn src={CancelIcon} onClick={() => props.onClose()}></CloseBtn>
         </OuterContainer>
     )
 }
@@ -89,7 +100,6 @@ const Label = styled.label`
     font-size: 0.8em;
     color: black;
     font-weight: 600;
-    margin-top: 20px;
     margin-bottom: 5px;
 `;
 
@@ -116,5 +126,21 @@ const Ether = styled.p`
 
 const Desc = styled.p`
     color: gray;
-    font-size: 0.8em;
+    font-size: 0.7em;
+`;
+
+const CloseBtn = styled.img`
+    width: 20px;
+    height: 20px;
+    margin-top: 20px;
+    padding: 15px;
+    object-fit: contain;
+    object-position: center;
+    z-index: 5;
+    border-radius: 50px;
+    background-color: rgba(255, 255, 255);
+
+    :hover{
+        cursor: pointer;
+    }
 `;

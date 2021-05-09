@@ -117,13 +117,13 @@ contract Exchange{
         companyContract.buyStocks(msg.sender, stocksToBuy, maxRate);
     }
 
-    function listStocks(string memory companyId, uint stocks, uint rate) public {
+    function listStocks(string memory companyId, uint stocks, uint rate) public returns(bool){
         address companyAddress = getCompanyContractAddressFromId(companyId);        
         if(companyAddress == address(0))
             revert('Invalid Company ID');
         
         Company companyContract = Company(payable(companyAddress));
-        companyContract.listStocksForSale(msg.sender, stocks, rate);
+        return companyContract.listStocksForSale(msg.sender, stocks, rate);
     }
 
     function unlistStocks(string memory companyId) public {

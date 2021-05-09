@@ -1,24 +1,32 @@
 import { useState } from 'react';
 import styled from 'styled-components';
+import CancelIcon from '../resources/cancel.png';
 
-// currentRate:number, onOuterClicked:func, onSellClicked(text):func
+// currentRate:number, onClose:func, onSellClick(text):func
 export default function SellDialog(props){
-    const [text, setText] = useState(props.currentRate);
+    const [stocks, setStocks] = useState(props.stocks);
+    const [rate, setRate] = useState(props.currentRate);
     return(
         <OuterContainer >
-            <Backdrop onClick={() => props.onOuterClick()} />
+            <Backdrop/>
             <Dialog>
                 <InnerDialog>
                     <Heading>Reliance Industries</Heading>
-                    <Label>Max price to buy at:</Label>
-                    <Input onChange={(event) => setText(event.target.value)} value={text} type="number" />
+                    <Label style={{marginTop: "20px"}}>Stocks to sell:</Label>
+                    <Input onChange={(event) => setStocks(event.target.value)} value={stocks} type="number" onKeyPress={(event) => {
+                        return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57
+                    }}/>
+                    <Ether>Stocks</Ether>
+                    <Label>Price at:</Label>
+                    <Input onChange={(event) => setRate(event.target.value)} value={rate} type="number" onKeyPress={(event) => {
+                        return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57
+                    }}/>
                     <Ether>Ether</Ether>
-                    <Desc>should be greater or equal to Current Market Price</Desc>
-                    <br />
-                    <Desc>Your wallet will be debited on clicking BUY and then if the shares are available at the rate lower/equal to this max price, you will get the shares and the difference amount will be refunded back to your wallet instantly</Desc>
+                    <Desc>Your stocks will be listed and as soon as they gets sold, your wallet will be credited with the amount.</Desc>
                 </InnerDialog>
-                <ActionBtn onClick={() => props.onSellClick(text)}>SELL</ActionBtn>     
+                <ActionBtn onClick={() => props.onSellClick(stocks, rate)}>SELL</ActionBtn>
             </Dialog>
+            <CloseBtn src={CancelIcon} onClick={() => props.onClose()}></CloseBtn>
         </OuterContainer>
     )
 }
@@ -91,7 +99,6 @@ const Label = styled.label`
     font-size: 0.8em;
     color: black;
     font-weight: 600;
-    margin-top: 20px;
     margin-bottom: 5px;
 `;
 
@@ -119,4 +126,20 @@ const Ether = styled.p`
 const Desc = styled.p`
     color: gray;
     font-size: 0.8em;
+`;
+
+const CloseBtn = styled.img`
+    width: 20px;
+    height: 20px;
+    margin-top: 20px;
+    padding: 15px;
+    object-fit: contain;
+    object-position: center;
+    z-index: 5;
+    border-radius: 50px;
+    background-color: rgba(255, 255, 255);
+
+    :hover{
+        cursor: pointer;
+    }
 `;

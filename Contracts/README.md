@@ -1,1 +1,0 @@
-These contracts are written and compiled using Remix website and are only stored here.

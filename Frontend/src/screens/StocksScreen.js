@@ -73,7 +73,7 @@ class StocksScreen extends React.Component{
                         {this.state.stocks.map(stock => {
                             return(
                                 <StockEntry 
-                                    id={stock.id}
+                                    key={stock.id}
                                     companyName={stock.name} 
                                     rate={stock.rate} 
                                     marketCap={stock.volume * stock.rate} 

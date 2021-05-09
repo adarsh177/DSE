@@ -1,0 +1,6 @@
+{
+    "portisAppId": "616fdcb2-6ff1-4258-ac1b-9dd59d9cfda9",
+    "nodeUrl": "https://ganache.adarshshrivastava.in",
+    "chainId": 1337,
+    "exchangeContractAddress": "0x78592d97E880f716DA4E4d4C3c409eE713F5e63C"
+}
